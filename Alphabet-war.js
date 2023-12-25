@@ -55,3 +55,40 @@ function alphabetWar(str) {
 }
 
 // or
+
+function alphabetWar(fight) {
+  const leftSide = { 'w': 4, 'p': 3, 'b': 2, 's': 1 };
+  const rightSide = { 'm': 4, 'q': 3, 'd': 2, 'z': 1 };
+  const afterBomb = fight.split('');
+  
+  const bombs = afterBomb.map((item, i) => {
+    if (item === '*') { return i }
+  }).filter(item => item !== undefined);
+
+  bombs.forEach(bomb => {
+    afterBomb[bomb] = '_';
+    if (bomb - 1 >= 0 && afterBomb[bomb - 1] !== '*') {
+      afterBomb[bomb - 1] = '_';
+    }
+    if (bomb + 1 < afterBomb.length  && afterBomb[bomb + 1] !== '*') {
+      afterBomb[bomb + 1] = '_';
+    }
+  })
+  
+  if (afterBomb.filter(item => item !== '_').length === 0) {
+    return `Let's fight again!`;
+  }
+  
+  const sum = afterBomb.reduce((acc, item) => {
+    if (leftSide[item] !== undefined) {
+      acc[0] += leftSide[item];
+    }
+    if (rightSide[item] !== undefined) {
+      acc[1] += rightSide[item];
+    }
+    return acc;
+  }, [0, 0])
+
+  return sum[0] > sum[1] ? `Left side wins!`  :
+         sum[0] < sum[1] ? `Right side wins!` : `Let's fight again!`
+}
